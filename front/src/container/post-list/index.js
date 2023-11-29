@@ -1,4 +1,5 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
+import { useWindowListener } from "../util/useWindowListener";
 
 import Title from "../../component/title";
 import Grid from "../../component/grid";
@@ -45,6 +46,22 @@ export default function PostList() {
     })),
 
     isEmpty: raw.list.length === 0,
+  });
+
+  useEffect(() => {
+    getData();
+
+    const intervalId = setInterval(() => getData(), 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useWindowListener("pointermove", (e) => {
+    setPosition({ x: e.clientX, y: e.clientY });
   });
 
   return (
